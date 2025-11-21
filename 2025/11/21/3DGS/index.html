@@ -20,28 +20,36 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Mage&#39;s Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="3DGS&emsp;&emsp;本系列的博客会持续总结本人观看3DGS文章、代码、技术后的相关知识。力求通过图片，数学详尽地阐述有关3DGS重建技术的方方面面。 &emsp;&emsp;如有错误，还望各位多多包涵，多多指正，希望能做到抛砖引玉的作用。 Gaussian Kernel&emsp;&emsp;3DGS重建使用大量的三维高斯核 $\mathcal{G}$ 来拟合场景，通过梯度下降优化高斯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3DGS">
+<meta property="og:url" content="http://example.com/2025/11/21/3DGS/index.html">
 <meta property="og:site_name" content="Mage&#39;s Blog">
+<meta property="og:description" content="3DGS&emsp;&emsp;本系列的博客会持续总结本人观看3DGS文章、代码、技术后的相关知识。力求通过图片，数学详尽地阐述有关3DGS重建技术的方方面面。 &emsp;&emsp;如有错误，还望各位多多包涵，多多指正，希望能做到抛砖引玉的作用。 Gaussian Kernel&emsp;&emsp;3DGS重建使用大量的三维高斯核 $\mathcal{G}$ 来拟合场景，通过梯度下降优化高斯">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/1.png">
+<meta property="article:published_time" content="2025-11-21T05:38:34.000Z">
+<meta property="article:modified_time" content="2025-11-21T11:01:30.810Z">
 <meta property="article:author" content="Mage">
+<meta property="article:tag" content="3DGS">
+<meta property="article:tag" content="Math">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/1.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2025/11/21/3DGS/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Mage's Blog</title>
+  <title>3DGS | Mage's Blog</title>
   
 
 
@@ -172,12 +180,13 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN,en,default">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2025/11/21/3DGS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -190,10 +199,9 @@
       <meta itemprop="name" content="Mage's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/11/21/3DGS/" class="post-title-link" itemprop="url">3DGS</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          3DGS
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -217,7 +225,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="3DGS"><a href="#3DGS" class="headerlink" title="3DGS"></a><a target="_blank" rel="noopener" href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/3d_gaussian_splatting_high.pdf">3DGS</a></h1><p>&emsp;&emsp;本系列的博客会持续总结本人观看3DGS文章、代码、技术后的相关知识。力求通过图片，数学详尽地阐述有关3DGS重建技术的方方面面。</p>
+        <h1 id="3DGS"><a href="#3DGS" class="headerlink" title="3DGS"></a><a target="_blank" rel="noopener" href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/3d_gaussian_splatting_high.pdf">3DGS</a></h1><p>&emsp;&emsp;本系列的博客会持续总结本人观看3DGS文章、代码、技术后的相关知识。力求通过图片，数学详尽地阐述有关3DGS重建技术的方方面面。</p>
 <p>&emsp;&emsp;如有错误，还望各位多多包涵，多多指正，希望能做到抛砖引玉的作用。</p>
 <h2 id="Gaussian-Kernel"><a href="#Gaussian-Kernel" class="headerlink" title="Gaussian Kernel"></a>Gaussian Kernel</h2><p>&emsp;&emsp;3DGS重建使用大量的三维高斯核 $\mathcal{G}$ 来拟合场景，通过梯度下降优化高斯核各个参数属性，并依靠RGB图像监督拟合的准确性。</p>
 <blockquote>
@@ -270,21 +278,27 @@ R = \begin{bmatrix}
 <script type="math/tex; mode=display">
 P(u,v) = \mathbf p_k + s_u\mathbf t_u u+ s_v\mathbf t_v v</script><p>&emsp;&emsp;$u, v$是局部切空间下的uv坐标。我可以通过叉乘来获得2DGS的法向量 $\mathbf t_w = \mathbf t_u \times \mathbf t_v$，这三个向量构成一个本地坐标系，从而我们可以用旋转矩阵 $R = [\mathbf t_u, \mathbf t_v, \mathbf t_w]$ 来优化，缩放矩阵中最后一个参数设置为0。</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/3DGS/" rel="tag"># 3DGS</a>
+              <a href="/tags/Math/" rel="tag"># Math</a>
+          </div>
+
+        
+
+
+        
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -337,6 +351,7 @@ P(u,v) = \mathbf p_k + s_u\mathbf t_u u+ s_v\mathbf t_v v</script><p>&emsp;&emsp
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#3DGS"><span class="nav-number">1.</span> <span class="nav-text">3DGS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Kernel"><span class="nav-number">1.1.</span> <span class="nav-text">Gaussian Kernel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2DGS"><span class="nav-number">1.2.</span> <span class="nav-text">2DGS</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
