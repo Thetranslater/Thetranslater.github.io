@@ -201,10 +201,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-11-21 13:38:34 / 修改时间：19:01:30" itemprop="dateCreated datePublished" datetime="2025-11-21T13:38:34+08:00">2025-11-21</time>
+              <time title="创建时间：2025-11-21 13:38:34" itemprop="dateCreated datePublished" datetime="2025-11-21T13:38:34+08:00">2025-11-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-22 10:20:02" itemprop="dateModified" datetime="2025-11-22T10:20:02+08:00">2025-11-22</time>
+              </span>
 
           
 
@@ -263,12 +269,58 @@ R = \begin{bmatrix}
 \end{bmatrix}</script><blockquote>
 <p>&emsp;&emsp;<em>$\mathbf q$必须是单位四元数，即$\sqrt{x^2+y^2+z^2+w^2} = 1$</em></p>
 </blockquote>
-<h2 id="2DGS"><a href="#2DGS" class="headerlink" title="2DGS"></a>2DGS</h2><p>&emsp;&emsp;<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2403.17888">这篇文章</a>使用2DGS来重建场景。相比于3DGS，2DGS在几何重建方面表现更好，渲染质量比3DGS略有提升。</p>
+<h2 id="2DGS"><a href="#2DGS" class="headerlink" title="2DGS"></a><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2403.17888">2DGS</a></h2><p>&emsp;&emsp;<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2403.17888">这篇文章</a>使用2DGS来重建场景。相比于3DGS，2DGS在几何重建方面表现更好，渲染质量比3DGS略有提升。</p>
 <p>&emsp;&emsp;一个三维高斯核在不同视角会产生不同的相交平面，从而产生不一致的采样点，但是2DGS就不会，如图所示：</p>
 <p><img src="/images/1.png" alt="a"></p>
 <p>&emsp;&emsp;2DGS被表示在本地的切空间(tangent space)中，由位置 $\mathbf p_k$ ，切向量 $\mathbf t_u, \mathbf t_v$和其缩放系数 $s_u, s_v$共同决定，参数化表示成：</p>
 <script type="math/tex; mode=display">
 P(u,v) = \mathbf p_k + s_u\mathbf t_u u+ s_v\mathbf t_v v</script><p>&emsp;&emsp;$u, v$是局部切空间下的uv坐标。我可以通过叉乘来获得2DGS的法向量 $\mathbf t_w = \mathbf t_u \times \mathbf t_v$，这三个向量构成一个本地坐标系，从而我们可以用旋转矩阵 $R = [\mathbf t_u, \mathbf t_v, \mathbf t_w]$ 来优化，缩放矩阵中最后一个参数设置为0。</p>
+<p>&emsp;&emsp;除了2DGS本身，我们额外聊聊2DGS的采样。如果你看过3DGS的代码，那么你就知道3DGS是在将高斯核投影到平面后依据像素空间上的欧式距离进行采样，其采样公式遵循：</p>
+<script type="math/tex; mode=display">
+\alpha = \exp {\left\{ -\dfrac{1}{2}(p_i - p_o)^T{\Sigma'}^{-1}(p_i-p_o) \right\}}</script><p>&emsp;&emsp;而2DGS则是在高斯核局部的uv空间内采样，即假设我们有坐标 $(u,v)$，那么采样公式为：</p>
+<script type="math/tex; mode=display">
+\alpha = \exp \left\{ -\dfrac{u^2+v^2}{2} \right\}</script><p>&emsp;&emsp;采样明显遵循在标准高斯分布。这因为两点原因：</p>
+<ol>
+<li>由于2DGS的旋转是由切向量 $\mathbf t_u, \mathbf t_v$ 保证的，从而我们可以让2DGS在局部切空间内与两个切向量对齐（即我们不再需要2DGS在切空间内旋转，所有的旋转在世界空间下保证），这说明2DGS在切空间下的分布是独立。</li>
+<li><p>在1.的条件下，我们可以证明：假设在切空间内使用坐标 $(x_t, y_t)$ 采样2DGS，根据2DGS参数化定义，我们有</p>
+<script type="math/tex; mode=display">
+ x_t = s_uu, \ y_t = s_vv</script><p> 从而</p>
+<script type="math/tex; mode=display">
+ \begin{align*}
+ \alpha 
+ &= \exp \left\{ 
+     -\dfrac{1}{2}[x_t, y_t]
+     \begin{bmatrix}
+     \frac{1}{{s_u}^2} & 0 \\
+     0 & \frac{1}{{s_v}^2}
+     \end{bmatrix}
+     \begin{bmatrix}
+     x_t\\ y_t
+     \end{bmatrix}
+     \right\} \\
+ &= \exp \left\{ -\dfrac{1}{2}\left( \dfrac{x_t^2}{s_u^2} + \dfrac{y_t^2}{s_v^2} \right)  \right\}\\
+ &= \exp \left\{ -\dfrac{u^2 + v^2}{2} \right\}
+ \end{align*}</script><p> 具体实现中，我们是在投影空间下进行计算，即世界坐标下的任何一点 $p$ 经过矩阵 $W$ 变换后变成齐次形式的投影空间坐标。</p>
+<script type="math/tex; mode=display">
+ \begin{bmatrix}
+ xz, yz, z ,z
+ \end{bmatrix}^T = Wp</script><p> 根据2DGS参数化定义，我们有</p>
+<script type="math/tex; mode=display">
+ P(u,v) = \mathbf p_k + s_u\mathbf t_u u+ s_v\mathbf t_v v = H[u,v,1,1]^T\\
+ \text{where}\ H =
+ \begin{bmatrix}
+ s_u\mathbf t_u & s_v\mathbf t_v & \mathbf 0 & \mathbf p_k\\
+ 0 & 0 & 0 & 1
+ \end{bmatrix}</script><p> 于是</p>
+<script type="math/tex; mode=display">
+ [xz, yz, z, z]^T = WH[u, v, 1, 1]^T = M[u, v, 1, 1]^T</script><p> 接下来我们使用齐次坐标的相关知识，使用平面和点在齐次坐标下的关系等，具体内容查看<a href="">这篇博客</a>。</p>
+<p> 我们将像素 $(x, y)$ 在投影空间中的射线使用两个平面 $\mathbf h_x = (-1, 0, 0, x)^T, \mathbf h_y = (0, -1, 0, y)^T$表示，我们将两个平面转换到2DGS本地空间中，通过齐次坐标相关知识，我们得知对平面上点的变换等价于对平面使用逆转置变换，那么我们可以得到：</p>
+<script type="math/tex; mode=display">
+ \mathbf h_u = (WH)^T\mathbf h_x,\ \mathbf h_v = (WH)^T\mathbf h_y</script><p> 由于点 $(u, v, 1, 1)$ 应该在像素的射线上，那么满足：</p>
+<script type="math/tex; mode=display">
+ \mathbf (u,v,1,1)h_u = \mathbf (u,v,1,1)h_v = 0</script><p> 于是可以解得像素射线与2DGS在切空间下交点的uv坐标，从而通过标准高斯采样。</p>
+</li>
+</ol>
 
       
     </div>
@@ -357,7 +409,7 @@ P(u,v) = \mathbf p_k + s_u\mathbf t_u u+ s_v\mathbf t_v v</script><p>&emsp;&emsp
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
